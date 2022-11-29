@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import rolesdata from "./rolesdata";
 
 const AuthContext = createContext()
@@ -8,12 +8,16 @@ const AuthProvider = ({ children }) => {
     const navigate = useNavigate()
     const [user, setUser] = useState(null)
 
+    let location = useLocation();
+
     const login = ({ username }) => {
         const permisos = rolesdata.find(roles => roles.rol === username)    
         setUser({ username, permisos })
-        navigate('/profile')
+        location = location?.pathname || '/'
+        navigate(location)
+        console.log(location);
     }
-    
+
     const logout = () => {
         setUser(null)
         navigate('/')

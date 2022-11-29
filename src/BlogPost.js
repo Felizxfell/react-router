@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from './auth';
 
 export default function BlogPost({ blogdata, eliminarBlog, editarBlog }) {
@@ -14,8 +14,6 @@ export default function BlogPost({ blogdata, eliminarBlog, editarBlog }) {
     })
 
     const auth = useAuth()
-
-    if (!auth.user) return <Navigate to="/login" />
 
     const blogpost = blogdata.find(post => post.slug === slug);
 
@@ -54,19 +52,19 @@ export default function BlogPost({ blogdata, eliminarBlog, editarBlog }) {
             <p>{blogpost.author}</p>
             <p>{blogpost.content}</p>
 
-            {permiso?.delete && (
+            {permiso?.delete && auth.user && (
                 <button onClick={deleteBlog}>
                     Eliminar Blogpost
                 </button>
             )}
 
-            {permiso?.update && !isedit && (
+            {permiso?.update && !isedit && auth.user && (
                 <button onClick={updateToggle}>
                     Editar Blogpost
                 </button>
             )}
 
-            {isedit && (
+            {isedit && auth.user && (
                 <button onClick={() => updateBlog(form)}>
                     Aceptar y Editar
                 </button>
